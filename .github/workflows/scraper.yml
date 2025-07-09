@@ -2,8 +2,8 @@ name: Run Scraper Daily
 
 on:
   schedule:
-    - cron: '0 22 * * *' # Jam 5 pagi WIB = 22:00 UTC
-  workflow_dispatch:     # Bisa dijalankan manual juga
+    - cron: '0 22 * * *'  # Jam 5 pagi WIB (UTC+7)
+  workflow_dispatch:       # Bisa dijalankan manual juga
 
 jobs:
   run-scraper:
@@ -18,9 +18,25 @@ jobs:
         with:
           node-version: 20
 
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
       - name: Install dependencies
-        run: npm install
-      
+        run: npm ci
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
@@ -32,3 +48,5 @@ jobs:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
         run: node scrape.js
+      - name: Show execution time
+        run: echo "✅ Done at $(date)"
