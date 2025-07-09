@@ -39,23 +39,31 @@ Setelah login, scraper diarahkan ke halaman laporan transaksi.
     ...
   ]
 
-4. Upload ke Google Sheets
+### 4. Upload ke Google Sheets
 Data dikirim ke Google Spreadsheet berdasarkan bulan. Nama sheet menggunakan format seperti: July 2025.
 
 Mekanisme upload:
+
 ✅ Jika sheet belum ada, maka sheet akan dibuat otomatis.
+
 ✅ Jika sheet sudah ada, data akan ditambahkan sebagai kolom baru berdasarkan tanggal.
+
 ✅ Jika project belum ada di baris, maka baris baru akan dibuat sesuai nama project.
 
-5. Scheduler (Otomatis Harian)
+### 5. Scheduler (Otomatis Harian)
 Menggunakan GitHub Actions sebagai scheduler untuk scraping otomatis.
 
 ⏰ Jadwal: Setiap hari pukul 05:00 WIB
 
 ⚙️ Yang dilakukan oleh GitHub Actions:
+
 Menjalankan scrape.js
+
 Mengatur dan menggunakan environment variables
+
 Caching dependencies (node_modules) untuk mempercepat waktu eksekusi
+
+Contoh konfigurasi jadwal (.github/workflows/schedule.yml):
 
 ```yaml
 schedule:
