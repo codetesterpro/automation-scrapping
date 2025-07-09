@@ -1,0 +1,31 @@
+name: Run Scraper Daily
+
+on:
+  schedule:
+    - cron: '0 22 * * *' # Jam 5 pagi WIB = 22:00 UTC
+  workflow_dispatch:     # Bisa dijalankan manual juga
+
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Decode credentials.json from secret
+        run: echo "${{ secrets.GOOGLE_SERVICE_KEY_BASE64 }}" | base64 -d > credentials.json
+
+      - name: Run scraper script
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+        run: node scrape.js
