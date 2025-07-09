@@ -1,6 +1,13 @@
 # File konfigurasi pribadi
-node_modules
 .env
 credentials.json
+credentialbase64.txt
+
+# Folder node_modules
+node_modules/
+
+# File log
 logError.txt
+
+# File Excel
 *.xlsx
