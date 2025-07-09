@@ -1,0 +1,6 @@
+# File konfigurasi pribadi
+node_modules/
+.env
+credentials.json
+logError.txt
+*.xlsx

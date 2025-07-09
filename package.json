@@ -13,6 +13,7 @@
   "dependencies": {
     "dayjs": "^1.11.13",
     "dotenv": "^17.0.1",
+    "googleapis": "^150.0.1",
     "playwright": "^1.53.2",
     "xlsx": "^0.18.5"
   }
