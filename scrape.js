@@ -1,11 +1,20 @@
 import { chromium } from 'playwright';
 import fs from 'fs';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
+import timezone from 'dayjs/plugin/timezone.js'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore.js';
 import { google } from 'googleapis';
 import 'dotenv/config';
 
 dayjs.extend(isSameOrBefore);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+// 🟢 DEBUG: Cek waktu lokal & Jakarta
+console.log("Default Dayjs:", dayjs().format());
+console.log("Jakarta Time:", dayjs().tz('Asia/Jakarta').format());
+
 
 const email = process.env.EMAIL;
 const password = process.env.PASSWORD;
@@ -16,7 +25,7 @@ const projects = JSON.parse(fs.readFileSync('projects.json', 'utf-8'));
 const credentials = JSON.parse(fs.readFileSync('credentials.json', 'utf-8'));
 const spreadsheetId = '1qd7VoQ79ZJ3aOrXT7omHmjatqWgoINSXsWoYe0IPBTc';
 
-const startDate = dayjs().subtract(1, 'day');
+const startDate = dayjs().tz('Asia/Jakarta').subtract(1, 'day');
 const endDate = startDate;
 
 // const startDate = dayjs("2025-07-01");
