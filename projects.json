@@ -1610,5 +1610,37 @@
   {
     "id": "647",
     "name": "MNP x ASGMA2"
+  },
+    {
+    "id": "651",
+    "name": "MNP x ASGMA3"
+  },
+  {
+    "id": "653",
+    "name": "MNP x ASGMA4"
+  },
+  {
+    "id": "655",
+    "name": "MNP x ASGMA5"
+  },
+  {
+    "id": "656",
+    "name": "MNP x ASGMA6"
+  },
+  {
+    "id": "657",
+    "name": "MNP x ASGMA7"
+  },
+  {
+    "id": "658",
+    "name": "MNP x ASGMA 8"
+  },
+  {
+    "id": "654",
+    "name": "MNP x ASGMA 9"
+  },
+  {
+    "id": "652",
+    "name": "MNP x ASGMA10"
   }
 ]
