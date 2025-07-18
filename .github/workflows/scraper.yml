@@ -43,10 +43,17 @@ jobs:
       - name: Decode credentials.json from secret
         run: echo "${{ secrets.GOOGLE_SERVICE_KEY_BASE64 }}" | base64 -d > credentials.json
 
-      - name: Run scraper script
+      - name: Update projects list
+        run: node update-project.js
         env:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
+
+      - name: Run scraper script
         run: node scrape.js
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+
       - name: Show execution time
         run: echo "✅ Done at $(date)"

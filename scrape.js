@@ -27,8 +27,8 @@ const spreadsheetId = "1qd7VoQ79ZJ3aOrXT7omHmjatqWgoINSXsWoYe0IPBTc";
 const startDate = dayjs().tz('Asia/Jakarta').subtract(1, 'day');
 const endDate = startDate;
 
-// const startDate = dayjs("2025-07-04");
-// const endDate = dayjs("2025-07-14");
+// const startDate = dayjs("2025-07-16");
+// const endDate = dayjs("2025-07-16");
 
 const sheetName = startDate.format("MMMM YYYY"); // Contoh: "July 2025"
 // const dateHeader = startDate.format("MMMM D"); // Contoh: "July 9"
@@ -54,7 +54,7 @@ async function scrapeProject(page, dateLabel, dateStr, project, retry = 0) {
       if (retry >= MAX_RETRY) throw new Error("Session expired");
       await login(page); // Login ulang jika sesi kedaluwarsa
       // Memberikan penundaan sebelum mencoba kembali
-      await page.waitForTimeout(3000); // Tunggu 3 detik
+      await page.waitForTimeout(4000); // Tunggu 3 detik
       return await scrapeProject(page, dateLabel, dateStr, project, retry + 1); // Coba lagi
     }
     // Menunggu elemen untuk muncul dan menangani error jika tidak ditemukan
@@ -163,17 +163,29 @@ async function uploadToGoogleSheet(projects, values, sheetName, columnDate) {
   }
   data[0] = header;
 
+  let totalRowIndex = data.findIndex((row) => row[0] === "Total") + 1;
+  
   // Update atau tambah baris
   for (let i = 0; i < projects.length; i++) {
     const name = projects[i].name;
     const idx = data.findIndex((row) => row[0] === name);
-    if (idx === -1) {
-      const newRow = Array(colIndex + 1).fill("");
-      newRow[0] = name;
-      newRow[colIndex] = values[i];
-      data.push(newRow);
+  if (idx === -1) {
+    const newRow = Array(colIndex + 1).fill("");
+    newRow[0] = name;
+    newRow[colIndex] = values[i];
+
+  if (totalRowIndex > 0) {
+    data.splice(totalRowIndex - 1, 0, newRow); // Insert sebelum Total
+    totalRowIndex++; // Geser Total ke bawah
     } else {
-      data[idx][colIndex] = values[i];
+      data.push(newRow);
+      }
+    } else {
+    // 🟩 Update nilai jika project sudah ada
+    if (data[idx].length <= colIndex) {
+      data[idx] = [...data[idx], ...Array(colIndex + 1 - data[idx].length).fill("")];
+    }
+    data[idx][colIndex] = values[i];
     }
   }
   // Update data di Google Sheets
@@ -187,8 +199,8 @@ async function uploadToGoogleSheet(projects, values, sheetName, columnDate) {
   const startRow = 2;
   // Tentukan baris SUM: baris setelah data terakhir
   let endRow = data.length;
-  let totalRowIndex = data.findIndex((row) => row[0] === "Total") + 1;
-
+  totalRowIndex = data.findIndex((row) => row[0] === "Total") + 1;
+  // Jika Total belum ada, buat di baris terakhir
   if (totalRowIndex === 0) {
     totalRowIndex = data.length + 1;
     await sheets.spreadsheets.values.update({
@@ -243,20 +255,19 @@ async function uploadToGoogleSheet(projects, values, sheetName, columnDate) {
     `✅ Data berhasil diupdate & diformat sebagai IDR di Google Sheets [${sheetName}]`
   );
 
-  // SUM untuk kolom yang baru diisi
   const colLetter = String.fromCharCode(65 + colIndex);
+  const sumRow = endRow + 1;
 
   await sheets.spreadsheets.values.update({
     spreadsheetId,
-    range: `${sheetName}!${colLetter}${totalRowIndex}`,
+    range: `${sheetName}!${colLetter}${sumRow}`,
     valueInputOption: "USER_ENTERED",
     requestBody: {
       values: [[`=SUM(${colLetter}${startRow}:${colLetter}${endRow})`]],
     },
   });
 
-  console.log(
-    `✅ Baris SUM otomatis ditambahkan di ${colLetter}${totalRowIndex}`
+  console.log(`✅ Formula SUM ditulis di baris ${sumRow} kolom ${colLetter}`
   );
 }
 

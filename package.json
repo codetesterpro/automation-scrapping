@@ -4,7 +4,9 @@
   "description": "",
   "main": "scrape.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "update-projects": "node update-project.js",
+    "scrape": "node scrape.js",
+    "update-and-scrape": "npm run update-projects && npm run scrape"
   },
   "keywords": [],
   "author": "",
