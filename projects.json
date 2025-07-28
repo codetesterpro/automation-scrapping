@@ -1646,5 +1646,57 @@
   {
     "id": "659",
     "name": "MNP x ASGMA 11"
+  },
+  {
+    "id": "662",
+    "name": "MNP x ASGMA 14"
+  },
+  {
+    "id": "661",
+    "name": "MNP x ASGMA 13"
+  },
+  {
+    "id": "660",
+    "name": "MNP x ASGMA 12"
+  },
+  {
+    "id": "728",
+    "name": "MNP x AMB 11"
+  },
+  {
+    "id": "727",
+    "name": "MNP x AMB 10"
+  },
+  {
+    "id": "726",
+    "name": "MNP x AMB 9"
+  },
+  {
+    "id": "725",
+    "name": "MNP x AMB 8"
+  },
+  {
+    "id": "724",
+    "name": "MNP x AMB 7"
+  },
+  {
+    "id": "723",
+    "name": "MNP x AMB 6"
+  },
+  {
+    "id": "722",
+    "name": "MNP x AMB 5"
+  },
+  {
+    "id": "721",
+    "name": "MNP x AMB 4"
+  },
+  {
+    "id": "720",
+    "name": "MNP x AMB 3"
+  },
+  {
+    "id": "719",
+    "name": "MNP x AMB 2"
   }
 ]
