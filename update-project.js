@@ -15,10 +15,48 @@ async function login(page) {
   await page.waitForURL("https://partner.lunahubs.com/");
 }
 
+async function setRowsPerPage(page, rowCount = 50) {
+  try {
+    await page.waitForSelector("table.fi-ta-table", { timeout: 10000 });
+    
+    // Direct option selection approach
+    const success = await page.evaluate((value) => {
+      // Find option with specific value
+      const option = document.querySelector(`option[value="${value}"]`);
+      if (option) {
+        option.selected = true;
+
+        // Get parent select and trigger events
+        const selectElement = option.closest('select');
+        if (selectElement) {
+          selectElement.value = value;
+          selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+          selectElement.dispatchEvent(new Event('input', { bubbles: true }));
+
+          return true;
+        }
+      }
+      return false;
+    }, rowCount.toString());
+
+    if (success) {
+      console.log(`Pagination diubah ke ${rowCount} rows per page`);
+      // Wait for table to reload
+      await page.waitForTimeout(4000);
+    } else {
+      throw new Error('Option element tidak ditemukan');
+    }
+
+  } catch (error) {
+    console.warn(`⚠️  Gagal mengubah pagination: ${error.message}, melanjutkan dengan default...`);
+  }
+}
+
 async function fetchProjects(page) {
   await page.goto(TARGET_URL);
   await page.screenshot({ path: "before-wait-table.png" });
   await page.waitForSelector("table.fi-ta-table");
+  await setRowsPerPage(page, 50);
   await page.waitForTimeout(2000);
   await page.screenshot({ path: "after-wait-table.png" });
 
@@ -29,18 +67,13 @@ async function fetchProjects(page) {
         const nameElement = columns[2]?.querySelector('span');
         const name = nameElement ? nameElement.textContent.trim() : '';
 
-
-
-      // Ambil teks langsung dari child pertama kolom kedua
-        // let nameElement = columns[1]?.querySelector('span');
-        // let rawName = nameElement ? nameElement.textContent.trim() : '';
-
       return { id, name };
     }).filter(p => p.id && p.name)
   );
+
+  projects.sort((a, b) => parseInt(a.id) - parseInt(b.id));
   return projects;
 }
-
 
 function mergeProjects(existingProjects, scrapedProjects) {
   // Normalize ID existing projects (hapus simbol # jika ada)

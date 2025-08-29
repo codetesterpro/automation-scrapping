@@ -27,8 +27,8 @@ const spreadsheetId = "1qd7VoQ79ZJ3aOrXT7omHmjatqWgoINSXsWoYe0IPBTc";
 const endDate = dayjs().tz('Asia/Jakarta').subtract(1, 'day');
 const startDate = endDate.subtract(3, 'day'); // H-4 s/d H-1
 
-// const startDate = dayjs("2025-07-26");
-// const endDate = dayjs("2025-07-27");
+// const startDate = dayjs("2025-08-21");
+// const endDate = dayjs("2025-08-27");
 
 const sheetName = startDate.format("MMMM YYYY"); // Contoh: "July 2025"
 // const dateHeader = startDate.format("MMMM D"); // Contoh: "July 9"
