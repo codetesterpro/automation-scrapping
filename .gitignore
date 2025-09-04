@@ -11,3 +11,6 @@ logError.txt
 
 # File Excel
 *.xlsx
+
+# File Txt
+*.txt

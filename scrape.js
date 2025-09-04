@@ -30,8 +30,6 @@ const startDate = endDate.subtract(3, 'day'); // H-4 s/d H-1
 // const startDate = dayjs("2025-08-21");
 // const endDate = dayjs("2025-08-27");
 
-const sheetName = startDate.format("MMMM YYYY"); // Contoh: "July 2025"
-// const dateHeader = startDate.format("MMMM D"); // Contoh: "July 9"
 
 async function login(page) {
   await page.goto("https://partner.lunahubs.com/login");
@@ -53,8 +51,7 @@ async function scrapeProject(page, dateLabel, dateStr, project, retry = 0) {
     if (page.url().includes("/login")) {
       if (retry >= MAX_RETRY) throw new Error("Session expired");
       await login(page); // Login ulang jika sesi kedaluwarsa
-      // Memberikan penundaan sebelum mencoba kembali
-      await page.waitForTimeout(4000); // Tunggu 3 detik
+      await page.waitForTimeout(4000);
       return await scrapeProject(page, dateLabel, dateStr, project, retry + 1); // Coba lagi
     }
     // Menunggu elemen untuk muncul dan menangani error jika tidak ditemukan
@@ -75,11 +72,11 @@ async function scrapeProject(page, dateLabel, dateStr, project, retry = 0) {
       "span.fi-wi-stats-overview-stat-description"
     );
 
-    // Memperbaiki pemformatan angka (menghapus "Rp", titik, dan koma)
+    
     const cleanedAmount = amountText
-      .replace(/[^\d,-]/g, "")
-      .replace(",", "")
-      .replace(".", "")
+      .replace(/[^\d.,-]/g, "")   // sisakan digit, koma, titik, minus
+      .replace(/\./g, "")         // hapus pemisah ribuan (titik)
+      .replace(/,/g, ".")         // ubah koma menjadi titik desimal
       .trim();
     const amount = parseFloat(cleanedAmount); // Mengubah menjadi angka
 
@@ -110,6 +107,10 @@ async function ensureSheetExists(spreadsheetId, sheetName, sheets) {
             addSheet: {
               properties: {
                 title: sheetName,
+                  gridProperties: {
+                  rowCount: 2000,    // bebas, longgar
+                  columnCount: 200,  // penting: lebih dari cukup untuk 31 hari
+                },
               },
             },
           },
@@ -153,7 +154,7 @@ async function uploadToGoogleSheet(projects, values, sheetName, columnDate) {
   // Dapatkan sheetId dari ensureSheetExists
   const sheetId = await ensureSheetExists(spreadsheetId, sheetName, sheets);
 
-  // Ambil data yang sudah ada di sheet
+  // Helper kolom
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId,
     range: `${sheetName}!A1:ZZ1000`, // Perbesar range hingga ZZ agar tidak mentok di Z
@@ -165,10 +166,39 @@ async function uploadToGoogleSheet(projects, values, sheetName, columnDate) {
 
   // Tambahkan header jika belum ada
   if (colIndex === -1) {
-    header.push(columnDate);
-    colIndex = header.length - 1;
+  header.push(columnDate);
+  colIndex = header.length - 1;
+
+  // ✅ Pastikan grid cukup kolom untuk header baru
+  const meta = await sheets.spreadsheets.get({
+    spreadsheetId,
+    fields: "sheets(properties(sheetId,gridProperties(columnCount,rowCount)))",
+  });
+  const sheetMeta = meta.data.sheets.find(s => s.properties.sheetId === sheetId);
+  const currentCols = sheetMeta?.properties?.gridProperties?.columnCount ?? 26;
+
+  if (currentCols < header.length) {
+    await sheets.spreadsheets.batchUpdate({
+      spreadsheetId,
+      requestBody: {
+        requests: [
+          {
+            updateSheetProperties: {
+              properties: {
+                sheetId,
+                gridProperties: {
+                  columnCount: header.length, // minimal sesuai jumlah header
+                },
+              },
+              fields: "gridProperties.columnCount",
+            },
+          },
+        ],
+      },
+    });
   }
-  data[0] = header;
+}
+data[0] = header;
 
   // ⬆️ Tambahkan padding ke setiap baris agar jumlah kolom sama dengan header
   for (let i = 1; i < data.length; i++) {
@@ -230,6 +260,7 @@ async function uploadToGoogleSheet(projects, values, sheetName, columnDate) {
       valueInputOption: "RAW",
       requestBody: { values: [["Total"]] },
     });
+    console.log(`ℹ️  Baris "Total" dibuat di baris ${totalRowIndex}`);
   } else {
     endRow = totalRowIndex - 1;
   }
@@ -269,14 +300,15 @@ async function uploadToGoogleSheet(projects, values, sheetName, columnDate) {
   });
 
   // Fungsi untuk mengubah colIndex ke AA, AB, dst.
-  function getColumnLetter(colIndex) {
-    let letter = '';
-    while (colIndex >= 0) {
-      letter = String.fromCharCode((colIndex % 26) + 65) + letter;
-      colIndex = Math.floor(colIndex / 26) - 1;
-    }
-    return letter;
+function getColumnLetter(colIndex) {
+  let idx = colIndex;
+  let letter = '';
+  while (idx >= 0) {
+    letter = String.fromCharCode((idx % 26) + 65) + letter;
+    idx = Math.floor(idx / 26) - 1;
   }
+  return letter;
+}
 
   const colLetter = getColumnLetter(colIndex);
   const sumRow = endRow + 1;
@@ -291,6 +323,26 @@ async function uploadToGoogleSheet(projects, values, sheetName, columnDate) {
   });
 
   console.log(`✅ Formula SUM ditulis di baris ${sumRow} kolom ${colLetter}`);
+
+  await sheets.spreadsheets.batchUpdate({
+    spreadsheetId,
+    requestBody: {
+      requests: [
+        {
+          autoResizeDimensions: {
+            dimensions: {
+              sheetId,
+              dimension: "COLUMNS",
+              startIndex: 0,
+              endIndex: header.length,
+            },
+          },
+        },
+      ],
+    },
+  });
+
+  console.log("✨ Kolom berhasil di-auto-resize");
 }
 
 
@@ -311,7 +363,8 @@ async function uploadToGoogleSheet(projects, values, sheetName, columnDate) {
   let currentDate = startDate;
 
   while (currentDate.isSameOrBefore(endDate, "day")) {
-    const dateLabel = currentDate.format("MMMM D");
+    const sheetName = currentDate.format("MMMM YYYY");
+    const dateLabel = currentDate.format("D");
     const dateStr = `${currentDate.format("YYYY-MM-DD")} - ${currentDate.format(
       "YYYY-MM-DD"
     )}`;
