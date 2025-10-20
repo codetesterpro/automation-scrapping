@@ -24,8 +24,17 @@ const projects = JSON.parse(fs.readFileSync("projects.json", "utf-8"));
 const credentials = JSON.parse(fs.readFileSync("credentials.json", "utf-8"));
 const spreadsheetId = "1qd7VoQ79ZJ3aOrXT7omHmjatqWgoINSXsWoYe0IPBTc";
 
-const endDate = dayjs().tz('Asia/Jakarta').subtract(1, 'day');
-const startDate = endDate.subtract(3, 'day'); // H-4 s/d H-1
+const ZONE = 'Asia/Jakarta';
+
+// Default: H-4 s/d H-1 (WIB), bisa di-override via env (format YYYY-MM-DD)
+const startDateStr = process.env.START_DATE || dayjs().tz(ZONE).subtract(4, 'day').format('YYYY-MM-DD');
+const endDateStr   = process.env.END_DATE   || dayjs().tz(ZONE).subtract(1, 'day').format('YYYY-MM-DD');
+
+const startDate = dayjs.tz(startDateStr, ZONE).startOf('day');
+const endDate   = dayjs.tz(endDateStr, ZONE).endOf('day');
+
+console.log(`[DATE RANGE] ${startDate.format('YYYY-MM-DD')} → ${endDate.format('YYYY-MM-DD')} (${ZONE})`);
+
 
 // const startDate = dayjs("2025-10-01");
 // const endDate = dayjs("2025-10-09");

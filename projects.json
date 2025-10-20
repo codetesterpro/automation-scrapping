@@ -2333,70 +2333,114 @@
   },
   {
     "id": "915",
-    "name": "MNP x Default 5"
+    "name": "MNP x SMB 237"
   },
   {
     "id": "916",
-    "name": "MNP x Default 6"
+    "name": "MNP x SMB 238"
   },
   {
     "id": "917",
-    "name": "MNP x Default 7"
+    "name": "MNP x Racing 31"
   },
   {
     "id": "918",
-    "name": "MNP x Default 8"
+    "name": "MNP x SMB 239"
   },
   {
     "id": "919",
-    "name": "MNP x Default 9"
+    "name": "MNP x OXPLAY"
   },
   {
     "id": "920",
-    "name": "MNP x Default 10"
+    "name": "MNP x Racing 32"
   },
   {
     "id": "921",
-    "name": "MNP x Default 11"
+    "name": "MNP x SMB 240"
   },
   {
     "id": "922",
-    "name": "MNP x Default 12"
+    "name": "MNP x WOLUTT"
   },
   {
     "id": "923",
-    "name": "MNP x Default 13"
+    "name": "MNP x WAK 10"
   },
   {
     "id": "924",
-    "name": "MNP x Default 14"
+    "name": "MNP x VIPER 6"
   },
   {
     "id": "925",
-    "name": "MNP x Default 15"
+    "name": "MNP x DRY"
   },
   {
     "id": "926",
-    "name": "MNP x Default 16"
+    "name": "MNP x Racing 33"
   },
   {
     "id": "927",
-    "name": "MNP x Default 17"
+    "name": "MNP x VOC"
   },
   {
     "id": "928",
-    "name": "MNP x Default 18"
+    "name": "MNP x AU"
   },
   {
     "id": "929",
-    "name": "MNP x Default 19"
+    "name": "MNP x SMB 241"
   },
   {
     "id": "930",
-    "name": "MNP x Default 20"
+    "name": "MNP x UGG 10"
   },
   {
     "id": "931",
     "name": "MNP x EXCH"
+  },
+  {
+    "id": "932",
+    "name": "MNP x UGG 11"
+  },
+  {
+    "id": "933",
+    "name": "MNP x UGG 12"
+  },
+  {
+    "id": "934",
+    "name": "MNP x UGG 13"
+  },
+  {
+    "id": "935",
+    "name": "MNP x UGG 14"
+  },
+  {
+    "id": "936",
+    "name": "MNP x UGG 15"
+  },
+  {
+    "id": "937",
+    "name": "MNP x UGG 16"
+  },
+  {
+    "id": "938",
+    "name": "MNP x UGG 17"
+  },
+  {
+    "id": "939",
+    "name": "MNP x UGG 18"
+  },
+  {
+    "id": "940",
+    "name": "MNP x UGG 19"
+  },
+  {
+    "id": "941",
+    "name": "MNP x UGG 20"
+  },
+  {
+    "id": "942",
+    "name": "MNP x UGG 21"
   }
 ]
