@@ -1,0 +1,46 @@
+name: Run Scraper Once (3AM WIB 21 Oct 2025)
+
+on:
+  schedule:
+    # 03:00 WIB (UTC+7) pada 21 Okt 2025 = 20:00 UTC pada 20 Okt 2025
+    - cron: '0 20 20 10 *'
+  # opsional: biar bisa manual kalau perlu
+  workflow_dispatch:
+
+jobs:
+  run-once:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - run: npm ci
+      - run: npx playwright install --with-deps
+
+      - name: Decode credentials.json
+        run: echo "${{ secrets.GOOGLE_SERVICE_KEY_BASE64 }}" | base64 -d > credentials.json
+
+      # Range khusus: 1 Okt → H-1 (WIB)
+      - name: Set date range (Oct 1 → H-1, WIB)
+        run: |
+          echo "START_DATE=2025-10-01" >> $GITHUB_ENV
+          echo "END_DATE=$(TZ=Asia/Jakarta date -d 'yesterday' +%F)" >> $GITHUB_ENV
+
+      - name: Update projects list
+        run: node update-project.js
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+
+      - name: Run scraper
+        run: node scrape.js
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          START_DATE: ${{ env.START_DATE }}
+          END_DATE: ${{ env.END_DATE }}
+
+      - run: echo "✅ Done at $(date)"
