@@ -33,11 +33,11 @@ const endDateStr   = process.env.END_DATE   || dayjs().tz(ZONE).subtract(1, 'day
 const startDate = dayjs.tz(startDateStr, ZONE).startOf('day');
 const endDate   = dayjs.tz(endDateStr, ZONE).endOf('day');
 
+// const startDate = dayjs("2025-11-13");
+// const endDate = dayjs("2025-11-13");
+
 console.log(`[DATE RANGE] ${startDate.format('YYYY-MM-DD')} → ${endDate.format('YYYY-MM-DD')} (${ZONE})`);
 
-
-// const startDate = dayjs("2025-10-01");
-// const endDate = dayjs("2025-10-09");
 
 
 async function login(page) {
