@@ -2866,5 +2866,29 @@
   {
     "id": "1050",
     "name": "ORION x SMB 132"
+  },
+  {
+    "id": "1051",
+    "name": "MNP x Paris 3"
+  },
+  {
+    "id": "1052",
+    "name": "MNP x Paris 4"
+  },
+  {
+    "id": "1053",
+    "name": "MNP x Paris 5"
+  },
+  {
+    "id": "1054",
+    "name": "MNP x Racing 44"
+  },
+  {
+    "id": "1055",
+    "name": "MNP x DWEH"
+  },
+  {
+    "id": "1056",
+    "name": "MNP x DWHC"
   }
 ]
