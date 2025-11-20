@@ -2469,6 +2469,7 @@
   },
   {
     "id": "949",
+    "id": "949",
     "name": "MNP x SMB 243"
   },
   {
@@ -2890,5 +2891,17 @@
   {
     "id": "1056",
     "name": "MNP x DWHC"
+  },
+  {
+    "id": "1059",
+    "name": "MNP x OLG 29"
+  },
+  {
+    "id": "1060",
+    "name": "MNP x DWSLTN"
+  },
+  {
+    "id": "1061",
+    "name": "MNP x SMB 250"
   }
 ]

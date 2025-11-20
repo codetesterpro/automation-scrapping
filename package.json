@@ -6,7 +6,13 @@
   "scripts": {
     "update-projects": "node update-project.js",
     "scrape": "node scrape.js",
-    "update-and-scrape": "npm run update-projects && npm run scrape"
+    "update-and-scrape": "npm run update-projects && npm run scrape",
+    "scrape:dry": "cross-env DRY_RUN=true node scrape.js",
+    "scrape:range": "cross-env START_DATE=$npm_config_from END_DATE=$npm_config_to node scrape.js",
+    "scrape:test": "cross-env SPREADSHEET_ID=$SPREADSHEET_ID_TEST node scrape.js",
+    "scrape:test:range": "cross-env SPREADSHEET_ID=$SPREADSHEET_ID_TEST START_DATE=$npm_config_from END_DATE=$npm_config_to node scrape.js",
+    "scrape:prod": "cross-env SPREADSHEET_ID=$SPREADSHEET_ID node scrape.js",
+    "scrape:prod:range": "cross-env SPREADSHEET_ID=$SPREADSHEET_ID START_DATE=$npm_config_from END_DATE=$npm_config_to node scrape.js"
   },
   "keywords": [],
   "author": "",
@@ -18,5 +24,8 @@
     "googleapis": "^150.0.1",
     "playwright": "^1.53.2",
     "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0"
   }
 }
