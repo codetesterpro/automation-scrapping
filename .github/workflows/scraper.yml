@@ -2,8 +2,8 @@ name: Run Scraper Daily
 
 on:
   schedule:
-    - cron: '0 22 * * *'  # Jam 5 pagi WIB (UTC+7)
-  workflow_dispatch:       # Bisa dijalankan manual juga
+    - cron: "0 22 * * *" # Jam 5 pagi WIB (UTC+7)
+  workflow_dispatch: # Bisa dijalankan manual juga
 
 permissions:
   contents: write
@@ -58,10 +58,13 @@ jobs:
         run: |
           if git status --porcelain projects.json | grep .; then
             echo "projects.json changed, committing..."
-            git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+
+            git pull --rebase
+
             git add projects.json
-            git commit -m "chore: update projects list [skip ci]" || echo "Nothing to commit"
+            git commit -m "chore: update projects list [skip ci]"
             git push
           else
             echo "No changes in projects.json"
