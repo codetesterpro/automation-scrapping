@@ -62,7 +62,14 @@ jobs:
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git config user.name "github-actions[bot]"
 
+            # stash seluruh perubahan terlebih dahulu
+            git stash --include-untracked
+
+            # ambil perubahan terbaru dari main
             git pull --rebase
+
+            # apply kembali perubahan tadi
+            git stash pop
 
             git add projects.json
             git commit -m "chore: update projects list [skip ci]"
