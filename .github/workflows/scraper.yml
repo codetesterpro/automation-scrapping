@@ -12,6 +12,12 @@ jobs:
   run-scraper:
     runs-on: ubuntu-latest
 
+    env:
+      EMAIL: ${{ secrets.EMAIL }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+      LUNA_BASE_URL: ${{ secrets.LUNA_BASE_URL }}
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -48,11 +54,6 @@ jobs:
 
       - name: Update projects list
         run: node update-project.js
-        env:
-          EMAIL: ${{ secrets.EMAIL }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
-          SCRAPING_BASE_URL: ${{ secrets.LUNA_BASE_URL }}
 
       - name: Commit updated projects.json if changed
         run: |
@@ -72,9 +73,6 @@ jobs:
 
       - name: Run scraper script
         run: node scrape.js
-        env:
-          EMAIL: ${{ secrets.EMAIL }}
-          PASSWORD: ${{ secrets.PASSWORD }}
 
       - name: Show execution time
         run: echo "✅ Done at $(date)"
