@@ -2910,5 +2910,49 @@
   {
     "id": "1064",
     "name": "MNP x SMB 251"
+  },
+  {
+    "id": "1065",
+    "name": "MNP x UG Minera 5"
+  },
+  {
+    "id": "1066",
+    "name": "MNP x UG Minera 6"
+  },
+  {
+    "id": "1067",
+    "name": "MNP x UG Minera 7"
+  },
+  {
+    "id": "1068",
+    "name": "MNP x UG Minera 8"
+  },
+  {
+    "id": "1069",
+    "name": "MNP x UG Minera 9"
+  },
+  {
+    "id": "1070",
+    "name": "MNP x SGA New 98"
+  },
+  {
+    "id": "1090",
+    "name": "MNP x OLG 32"
+  },
+  {
+    "id": "1091",
+    "name": "MNP x OLG 33"
+  },
+  {
+    "id": "1092",
+    "name": "MNP x OLG 34"
+  },
+  {
+    "id": "1093",
+    "name": "MNP x OLG 31"
+  },
+  {
+    "id": "1094",
+    "name": "MNP x Lee 2"
   }
 ]
