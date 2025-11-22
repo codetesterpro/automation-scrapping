@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      EMAIL: ${{ secrets.EMAIL }}
-      PASSWORD: ${{ secrets.PASSWORD }}
-      SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+      EMAIL_ORION: ${{ secrets.EMAIL_ORION }}
+      PASSWORD_ORION: ${{ secrets.PASSWORD_ORION }}
+      SPREADSHEET_ID_ORION: ${{ secrets.SPREADSHEET_ID_ORION }}
       LUNA_BASE_URL: ${{ secrets.LUNA_BASE_URL }}
       PROJECTS_FILE: "projects-orion.json"
 
