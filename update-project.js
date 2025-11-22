@@ -4,16 +4,18 @@ import "dotenv/config";
 
 const email = process.env.EMAIL;
 const password = process.env.PASSWORD;
-const PROJECTS_FILE = "projects.json";
-const TARGET_URL = "https://partner.lunahubs.com/projects";
+const PROJECTS_FILE = process.env.PROJECTS_FILE || "projects.json";
+const LUNA_BASE_URL = process.env.LUNA_BASE_URL || "https://partner.lunahubs.com";
+const TARGET_URL = `${LUNA_BASE_URL}/projects`;
 
 async function login(page) {
-  await page.goto("https://partner.lunahubs.com/login");
+  await page.goto(`${LUNA_BASE_URL}/login`);
   await page.fill("#data\\.email", email);
   await page.fill("#data\\.password", password);
   await page.click('button[type="submit"]');
-  await page.waitForURL("https://partner.lunahubs.com/");
+  await page.waitForURL(`${LUNA_BASE_URL}/`);
 }
+
 
 async function setRowsPerPage(page, rowCount = 50) {
   try {
@@ -54,11 +56,9 @@ async function setRowsPerPage(page, rowCount = 50) {
 
 async function fetchProjects(page) {
   await page.goto(TARGET_URL);
-  await page.screenshot({ path: "before-wait-table.png" });
   await page.waitForSelector("table.fi-ta-table");
   await setRowsPerPage(page, 50);
   await page.waitForTimeout(2000);
-  await page.screenshot({ path: "after-wait-table.png" });
 
   const projects = await page.$$eval("table.fi-ta-table tbody tr", (rows) =>
     rows.map((row) => {

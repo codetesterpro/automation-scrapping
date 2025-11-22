@@ -9,7 +9,12 @@ const password = process.env.PASSWORD;
 const BATCH_SIZE = 10;
 const MAX_RETRY = 1;
 
-const projects = JSON.parse(fs.readFileSync("projects.json", "utf-8"));
+const PROJECTS_FILE = process.env.PROJECTS_FILE || "projects.json";
+const projects = JSON.parse(fs.readFileSync(PROJECTS_FILE, "utf-8"));
+
+console.log(`🗂 Using projects file: ${PROJECTS_FILE}`);
+
+
 const credentials = JSON.parse(fs.readFileSync("credentials.json", "utf-8"));
 // ambil dari env (GitHub Secrets / .env lokal)
 const spreadsheetId = process.env.SPREADSHEET_ID;

@@ -1,0 +1,86 @@
+name: Run Scraper Daily - Orion
+
+on:
+  schedule:
+    - cron: "0 21 * * *" # Jam 4 pagi WIB (UTC+7)
+  workflow_dispatch: # Bisa dijalankan manual juga
+
+permissions:
+  contents: write
+
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+
+    env:
+      EMAIL: ${{ secrets.EMAIL }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+      LUNA_BASE_URL: ${{ secrets.LUNA_BASE_URL }}
+      PROJECTS_FILE: "projects-orion.json"
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Decode credentials.json from secret
+        run: echo "${{ secrets.GOOGLE_SERVICE_KEY_BASE64 }}" | base64 -d > credentials.json
+
+      - name: Update projects list
+        run: node update-project.js
+
+      - name: Commit updated projects.json if changed
+        run: |
+          if git status --porcelain projects.json | grep .; then
+            echo "projects.json changed, committing..."
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+
+            # stash seluruh perubahan terlebih dahulu
+            git stash --include-untracked
+
+            # ambil perubahan terbaru dari main
+            git pull --rebase
+
+            # apply kembali perubahan tadi
+            git stash pop
+
+            git add projects.json
+            git commit -m "chore: update projects list [skip ci]"
+            git push
+          else
+            echo "No changes in projects.json"
+          fi
+
+      - name: Run scraper script
+        run: node scrape.js
+
+      - name: Show execution time
+        run: echo "✅ Done at $(date)"
