@@ -56,10 +56,10 @@ jobs:
       - name: Update projects list
         run: node update-project.js
 
-      - name: Commit updated projects.json if changed
+      - name: Commit updated projects-orion.json if changed
         run: |
-          if git status --porcelain projects.json | grep .; then
-            echo "projects.json changed, committing..."
+          if git status --porcelain projects-orion.json | grep .; then
+            echo "projects-orion.json changed, committing..."
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git config user.name "github-actions[bot]"
 
@@ -72,11 +72,11 @@ jobs:
             # apply kembali perubahan tadi
             git stash pop
 
-            git add projects.json
+            git add projects-orion.json
             git commit -m "chore: update projects list [skip ci]"
             git push
           else
-            echo "No changes in projects.json"
+            echo "No changes in projects-orion.json"
           fi
 
       - name: Run scraper script

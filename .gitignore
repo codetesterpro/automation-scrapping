@@ -2,6 +2,9 @@
 .env
 credentials.json
 credentialbase64.txt
+prompt.md
+transaction-reports-filter.md
+transaction-reports.md
 
 # Folder node_modules
 node_modules/
