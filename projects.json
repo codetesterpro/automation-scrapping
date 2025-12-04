@@ -2786,5 +2786,49 @@
   {
     "id": "1126",
     "name": "MNP x OLG 52"
+  },
+  {
+    "id": "1127",
+    "name": "MNP X ST"
+  },
+  {
+    "id": "1128",
+    "name": "MNP x WONGSO 4"
+  },
+  {
+    "id": "1129",
+    "name": "MNP x WONGSO 5"
+  },
+  {
+    "id": "1130",
+    "name": "MNP x WONGSO 6"
+  },
+  {
+    "id": "1131",
+    "name": "MNP x SMB 252"
+  },
+  {
+    "id": "1132",
+    "name": "MNP x SMB 253"
+  },
+  {
+    "id": "1133",
+    "name": "MNP x SMB 254"
+  },
+  {
+    "id": "1134",
+    "name": "MNP X MLKY 14"
+  },
+  {
+    "id": "1135",
+    "name": "MNP X MLKY 15"
+  },
+  {
+    "id": "1136",
+    "name": "MNP X MLKY 16"
+  },
+  {
+    "id": "1138",
+    "name": "MNP X OLG53"
   }
 ]
